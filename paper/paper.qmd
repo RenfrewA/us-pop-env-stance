@@ -1,0 +1,98 @@
+---
+title: "My title"
+subtitle: "My subtitle if needed"
+author: 
+  - Renfrew Ao-Ieong
+thanks: "Code and data are available at: LINK."
+date: today
+date-format: long
+abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+format: pdf
+number-sections: true
+bibliography: references.bib
+---
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(palmerpenguins)
+```
+
+
+# Introduction
+
+We are becoming more aware of the effects that humans have on the environment. In the past _____ years, we have done _________ to negatively impact the environment. To prevent this on a large scale, it is up to the governments of countries. One of the leading causes of pollution is the burning of fossil fuels to generate electricity. To prevent this, a shift towards renewable energy sources has been on the rise. Harnessing renewable energy sources such as wind, solar, and hydroelectric will be needed if we are to reduce the harmful air pollution from sources such as coal, oil, natural gas, and nuclear energy. Most of these non-renewable sources come from the past so the infrastructure has been in place for a long time. We need to build new infrastructure for renewable energy sources such as building dams, wind turbines, and solar panels. This will come at a financial cost which will have to ultimately come from the citizens in the form of increased taxes or increased electricity payments.
+
+From the CES 2020 dataset, we will analyze whether political preference, education level, and type of area a person is living in (family income?) affects their stance on reducing pollution and climate change prevention.
+
+The scenario that was proposed in the survey was: Require that each state use a minimum amount of renewable fuels (wind, solar, and hydroelectric) in the generation of electricity even if electricity prices increase a little. And the possible responses were: support or oppose. We can consider this support of or opposition of this scenario as their stance on the necessity of reducing pollution and climate change prevention.
+
+Preventing climate change is not free. Thus it is important to recognize that certain sacrifices have to be made in order to benefit our earth.
+
+
+# Data {#sec-data}
+
+
+# Model
+
+We want to model an American's stance on climate change, specifically their position on requiring that each state use a minimum amount of renewable fuels in the generation of electricity even in electricity prices increase a little. In our model, we consider a person's political preference, education level, and type of area they are living in to predict their stance on this topic.
+
+\begin{align} 
+y_i|\pi_i &\sim \mbox{Bern}(\pi_i) \\
+\mbox{logit}(\pi_i) &= \alpha + \beta \times \mbox{politicalPref}_i + \gamma \times \mbox{education}_i + \delta \times \mbox{livingArea}_i\\
+\alpha &\sim \mbox{Normal}(0, 2.5) \\
+\beta &\sim \mbox{Normal}(0, 2.5) \\
+\gamma &\sim \mbox{Normal}(0, 2.5) \\
+\delta &\sim \mbox{Normal}(0, 2.5)
+\end{align}
+
+Where:
+
+* $y_i$ is the binary outcome variable, representing 
+* $\pi_i$ is the probability that respondent 
+* ${politicalPref}_i$ is a predictor variable, representing the political preference of respondent $i$, 
+* ${education}_i$ is a predictor variable, representing the education level of the respondent
+* ${livingArea}_i$ is a predictor variable, the residential area that the respondent is living in (urban, rural, suburban, etc.) $i$.
+
+
+## Model set-up
+
+
+### Model justification
+
+
+# Results
+
+
+# Discussion
+
+## First discussion point {#sec-first-point}
+
+If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+
+## Second discussion point
+
+## Third discussion point
+
+## Weaknesses and next steps
+
+Weaknesses and next steps should also be included.
+
+\newpage
+
+\appendix
+
+# Appendix {-}
+
+
+# Additional data details
+
+\newpage
+
+
+# References
+
+
