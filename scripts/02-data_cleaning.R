@@ -1,14 +1,14 @@
 #### Preamble ####
 # Purpose: Cleans the raw plane data recorded by two observers..... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 6 April 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Author: Renfrew Ao-Ieong
+# Date: 11 April 2024
+# Contact: renfrew.aoieong@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: tidyverse, arrow
 
 #### Workspace setup ####
 library(tidyverse)
+library(arrow)
 
 #### Clean data ####
 # CC20_333b: - Require that each state use a minimum amount of renewable fuels (wind, solar, and hydroelectric) in the generation of electricity even if electricity prices increase a little
@@ -26,6 +26,23 @@ library(tidyverse)
 # urbancity: How would you describe the place where you live?
 # 1 - City, 2 - Suburb, 3 - Town, 4 - Rural area, 5 - Other
 
+cleaned_ces2020_env <-
+  read_parquet(
+    "data/raw_data/raw_ces2020_env.parquet",
+    col_types =
+      cols(
+        "CC20_333b" = col_integer(),
+        "ideo5" = col_integer(),
+        "faminc_new" = col_integer(),
+        "educ" = col_integer(),
+        "urbancity" = col_integer(),
+      )
+  )
+
+
+cleaned_ces2020_env <-
+  cleaned_ces2020_env |>
+  filter(ideo5 != 6, faminc_new != 17, urbancity != 5) # Filter out ideo5 6: Not sure, faminc_new: 17 prefer not to say, urbancity: 5 other
 
 #### Save data ####
-write_csv(cleaned_ces2020_env, "outputs/data/cleaned_ces2020_env.parquet")
+write_csv(cleaned_ces2020_env, "data/analysis_data/cleaned_ces2020_env.parquet")
