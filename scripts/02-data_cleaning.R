@@ -42,7 +42,7 @@ cleaned_ces2020_env <-
 
 cleaned_ces2020_env <-
   cleaned_ces2020_env |>
-  filter(ideo5 != 6, faminc_new != 17, urbancity != 5) # Filter out ideo5 6: Not sure, faminc_new: 17 prefer not to say, urbancity: 5 other
+  filter(!is.na(CC20_333b), ideo5 != 6, faminc_new != 97, urbancity != 5) # Filter out ideo5 6: Not sure, faminc_new: 97 prefer not to say, urbancity: 5 other
 
 #### Save data ####
 write_csv(cleaned_ces2020_env, "data/analysis_data/cleaned_ces2020_env.parquet")
