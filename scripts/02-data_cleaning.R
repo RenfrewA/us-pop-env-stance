@@ -134,7 +134,7 @@ cleaned_ces2020_env <-
       )
     )
   ) |>
-  select(env_stance, political_pref,household_income, education, living_area)
+  select(env_stance, household_income, education, living_area)
 
 cleaned_ces2020_env
 #### Save data ####

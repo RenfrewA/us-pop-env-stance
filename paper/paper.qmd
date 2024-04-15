@@ -17,8 +17,27 @@ bibliography: references.bib
 #| warning: false
 #| message: false
 
+# Workspace Setup
+
 library(tidyverse)
-library(palmerpenguins)
+library(rstanarm)
+library(knitr)
+library(here)
+library(ggplot2)
+library(arrow)
+library(scales)
+library(modelsummary)
+library(marginaleffects)
+
+# Read in cleaned data
+ces2020_env = read_parquet(
+  file = here("data/analysis_data/cleaned_ces2020_env.parquet"),
+  show_col_types = FALSE
+)
+
+# Read in model
+env_support <-
+  readRDS(file = here::here("models/env_support.rds"))
 ```
 
 
@@ -43,7 +62,7 @@ We want to model an American's stance on climate change, specifically their posi
 
 \begin{align} 
 y_i|\pi_i &\sim \mbox{Bern}(\pi_i) \\
-\mbox{logit}(\pi_i) &= \alpha + \beta \times \mbox{politicalPref}_i + \gamma \times \mbox{education}_i + \delta \times \mbox{livingArea}_i\\
+\mbox{logit}(\pi_i) &= \alpha + \beta \times \mbox{household_income}_i + \gamma \times \mbox{education}_i + \delta \times \mbox{livingArea}_i\\
 \alpha &\sim \mbox{Normal}(0, 2.5) \\
 \beta &\sim \mbox{Normal}(0, 2.5) \\
 \gamma &\sim \mbox{Normal}(0, 2.5) \\
@@ -54,7 +73,7 @@ Where:
 
 * $y_i$ is the binary outcome variable, representing 
 * $\pi_i$ is the probability that respondent 
-* ${politicalPref}_i$ is a predictor variable, representing the political preference of respondent $i$, 
+* ${household_income}_i$ is a predictor variable, representing the household income of the respondent $i$, 
 * ${education}_i$ is a predictor variable, representing the education level of the respondent
 * ${livingArea}_i$ is a predictor variable, the residential area that the respondent is living in (urban, rural, suburban, etc.) $i$.
 
@@ -66,6 +85,22 @@ Where:
 
 
 # Results
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| label: tbl-model-summary-table
+#| tbl-cap: "Explanatory models of renewable energy support based on household income, education level, and land type of residence (n = 3000)"
+library(modelsummary)
+
+modelsummary(
+  list(
+    "Support renewable energy even at a higher monetary cost" = env_support
+  ),
+  statistic = "mad"
+  )
+```
 
 We performed logistic regression analysis on ___ observations of the total ___ observations in the cleaned dataset. We are interested in whether or not a person's political preference, household income, education, or area where they are living in will impact their stance towards preventing climate change. 
 
