@@ -4,7 +4,7 @@
 # Date: 11 April 2024
 # Contact: renfrew.aoieong@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: tidyverse, arrow
+# Pre-requisites: tidyverse, arrow, raw_ces2020_env.parquet
 
 #### Workspace setup ####
 library(tidyverse)
@@ -51,8 +51,9 @@ cleaned_ces2020_env <-
       ideo5 == 2 ~ "Liberal",
       ideo5 == 3 ~ "Moderate",
       ideo5 == 4 ~ "Conservative",
-      ideo5 == 5 ~ "Very Convservative",
+      ideo5 == 5 ~ "Very Conservative",
     ),
+    political_pref = as_factor(political_pref),
     household_income = factor(faminc_new,
                               levels = c(
                                 "Very Liberal",
