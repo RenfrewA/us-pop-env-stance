@@ -3,7 +3,7 @@ title: "My title"
 subtitle: "My subtitle if needed"
 author: 
   - Renfrew Ao-Ieong
-thanks: "Code and data are available at: LINK."
+thanks: "Code and data are available at: [https://github.com/RenfrewA/us-pop-env-stance](https://github.com/RenfrewA/us-pop-env-stance)"
 date: today
 date-format: long
 abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
@@ -26,11 +26,12 @@ library(palmerpenguins)
 
 We are becoming more aware of the effects that humans have on the environment. In the past _____ years, we have done _________ to negatively impact the environment. To prevent this on a large scale, it is up to the governments of countries. One of the leading causes of pollution is the burning of fossil fuels to generate electricity. To prevent this, a shift towards renewable energy sources has been on the rise. Harnessing renewable energy sources such as wind, solar, and hydroelectric will be needed if we are to reduce the harmful air pollution from sources such as coal, oil, natural gas, and nuclear energy. Most of these non-renewable sources come from the past so the infrastructure has been in place for a long time. We need to build new infrastructure for renewable energy sources such as building dams, wind turbines, and solar panels. This will come at a financial cost which will have to ultimately come from the citizens in the form of increased taxes or increased electricity payments.
 
+
 From the CES 2020 dataset, we will analyze whether political preference, education level, and type of area a person is living in (family income?) affects their stance on reducing pollution and climate change prevention.
 
 The scenario that was proposed in the survey was: Require that each state use a minimum amount of renewable fuels (wind, solar, and hydroelectric) in the generation of electricity even if electricity prices increase a little. And the possible responses were: support or oppose. We can consider this support of or opposition of this scenario as their stance on the necessity of reducing pollution and climate change prevention.
 
-Preventing climate change is not free. Thus it is important to recognize that certain sacrifices have to be made in order to benefit our earth.
+There will always be a cost associated with climate change. Thus it is important to recognize that certain sacrifices have to be made in order to benefit our earth.
 
 
 # Data {#sec-data}
@@ -66,6 +67,8 @@ Where:
 
 # Results
 
+We performed logistic regression analysis on ___ observations of the total ___ observations in the cleaned dataset. We are interested in whether or not a person's political preference, household income, education, or area where they are living in will impact their stance towards preventing climate change. 
+
 
 # Discussion
 
@@ -79,7 +82,7 @@ If my paper were 10 pages, then should be be at least 2.5 pages. The discussion 
 
 ## Weaknesses and next steps
 
-Weaknesses and next steps should also be included.
+Weakness in the question. It states "... even if electricity prices increase a little" but this is can mean something different to everyone. The wording leaves it up to the reader for interpretation on how much the price will increase. Thus, a person's decision may be different depending on if this question had a more concrete wording with a price range or percent.
 
 \newpage
 
