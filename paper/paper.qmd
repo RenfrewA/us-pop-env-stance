@@ -110,6 +110,18 @@ modelsummary(
   )
 ```
 
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| label: env-predictions
+#| tbl-cap: "Probability that an individual supports that each state requires a minimum amount of renewable fuels for energy generation even if it increases costs"
+env_predictions <-
+  predictions(env_support)
+
+knitr::kable(tail(env_predictions))
+```
+
 # Discussion
 
 ## Higher Household Income increases a person's willingness to contribute to renewable energy sources {#sec-first-point}

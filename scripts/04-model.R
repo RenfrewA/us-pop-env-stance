@@ -22,7 +22,7 @@ cleaned_ces2020_env <- read_parquet("data/analysis_data/cleaned_ces2020_env.parq
 # Sample 3000 observations from the cleaned dataset
 ces2020_env_reduced <- 
   cleaned_ces2020_env |>
-  slice_sample(n=10000)
+  slice_sample(n=3000)
 
 env_support <-
   stan_glm(
