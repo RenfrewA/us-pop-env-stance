@@ -14,6 +14,7 @@ library(arrow)
 # CC20_333b: - Require that each state use a minimum amount of renewable fuels (wind, solar, and hydroelectric) in the generation of electricity even if electricity prices increase a little
 # 1 - Support, 2 - Oppose
 
+# EXCLUDED
 # ideo5: In general, how would you describe your own political viewpoint?
 # 1 - Very Liberal, 2 - Liberal, 3 - Moderate, 4 - Conservative, 5 - Very Conservative, 6 - Not sure
 
@@ -134,6 +135,7 @@ cleaned_ces2020_env <-
       )
     )
   ) |>
+  # Decided to exclude political stance
   select(env_stance, household_income, education, living_area)
 
 cleaned_ces2020_env

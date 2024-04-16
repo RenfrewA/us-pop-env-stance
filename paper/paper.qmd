@@ -1,13 +1,14 @@
 ---
 title: "Factors affecting Americans' Reluctance to Support Renewable Energy Sources"
-subtitle: "My subtitle if needed"
 author: 
   - Renfrew Ao-Ieong
 thanks: "Code and data are available at: [https://github.com/RenfrewA/us-pop-env-stance](https://github.com/RenfrewA/us-pop-env-stance)"
 date: today
 date-format: long
-abstract: "Using data from CES2020, we investigated the support for the question: \"Require that each state use a minimum amount of renewable fuels in the generation of electricity even if electricity prices increase a little?\". We found that support increased as a person's household income increased and also increased if a person lived in a rural area. We also found that the level of education a person has does not neccessarily inrease their support for using renewable fuels. These findings give an insight into areas where we may need to focus resources on promoting the benefits of switching to sustainable and renewable sources of energy."
-format: pdf
+abstract: "Using data from CES2020, we investigated the support for the question: \"Require that each state use a minimum amount of renewable fuels in the generation of electricity even if electricity prices increase a little?\". We found that a person is more likely to answer with support if they are in a more urban living environment and if they have a higher education level. These findings give an insight into areas where we may need to focus resources on promoting the benefits of switching to sustainable and renewable sources of energy."
+format: 
+  pdf:
+    fig-pos: "H"
 number-sections: true
 toc: true
 bibliography: references.bib
@@ -40,9 +41,6 @@ ces2020_env = read_parquet(
 # Read in model
 env_support <-
   readRDS(file = here::here("models/env_support.rds"))
-
-env_support_education <-
-  readRDS(file= here::here("models/env_support_education.rds"))
 ```
 
 
@@ -52,19 +50,73 @@ Society is becoming increasing aware of the effects that humans have on the envi
 
 From the CES 2020 dataset, we will analyze whether household income, education level, and type of area a person is living in affects their stance on reducing pollution and climate change prevention.
 
-The scenario that was proposed in the survey was: Require that each state use a minimum amount of renewable fuels (wind, solar, and hydroelectric) in the generation of electricity even if electricity prices increase a little. Our estimand is the value of support for this proposition, either support or oppose. By analyzing this data, we can identify trends with the previously stated factors. This can be used to better understand people's stance on this issue and help develop different ways to increase support.
+The scenario that was proposed in the survey was: Require that each state use a minimum amount of renewable fuels (wind, solar, and hydroelectric) in the generation of electricity even if electricity prices increase a little. In this paper, we will call this scenario the "proposition". Our estimand is the value of support for this proposition, either support or oppose. By analyzing this data, we can identify trends with the previously stated factors. This can be used to better understand people's stance on this issue and help develop different ways to increase support.
 
 The structure of the paper is as follows: Data, Model, Results, and Discussion.
 
 # Data {#sec-data}
 
+We chose to display the data by plotting it with a double bar graph using `ggplot` [@rGgplot2] where the left bar represents the amount of people who support the proposition and the right bar representing the amount of people who do not support the proposition.
 
+We created three graphs, one for each of the explanatory variables.
+
+## Support for Proposition based on Household Income
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| label: fig-hh-income-support
+#| fig-cap: Support for Proposition based on Household Income
+# https://stackoverflow.com/questions/1330989/rotating-and-spacing-axis-labels-in-ggplot2
+ggplot(ces2020_env, aes(x = household_income, fill = env_stance)) +
+  geom_bar(position = "dodge") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(y= "Count", x = "Household Income")
+```
+
+In @fig-hh-income-support we can see that there is not much variation between the income brackets in terms of their support for the proposition. The amount of people who support are about twice as much as those who oppose in the same income bracket and this appears to be the case for all income brackets.
+
+## Support for Proposition based on Education Level
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| label: fig-education-support
+#| fig-cap: Support for Proposition based on Education Level
+ggplot(ces2020_env, aes(x = education, fill = env_stance)) +
+  geom_bar(position = "dodge") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(y= "Count", x = "Education Level")
+```
+
+In @fig-education-support we can see that as we move up in education level, the difference between the number of those who support and those who oppose the proposition grow larger. This indicates that education level may have an effect on whether an individual supports the idea that states should have a minimum amount of renewable energy sources even if it may cost more.
+
+## Support for Proposition based on Type of Area a Person Lives In
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| label: fig-living-area-support
+#| fig-cap: Support for Proposition based on Type of Area a Person Lives In
+ggplot(ces2020_env, aes(x = living_area, fill = env_stance)) +
+  geom_bar(position = "dodge") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(y= "Count", x = "Land Type")
+```
+In @fig-living-area-support, we can see that as we move to more rural areas, the gap becomes larger between the number of those who support and oppose the proposition. People who live in the city tend to have more support vs people in rural areas. As we move from city to rural, it seems like the gap is getting smaller indicating less support or more opposition to the proposition.
+
+## Measurement
+
+According to CCES Guide 2020, the data was obtained by 60 teams who each purchased a 1,000 person national sample survey, conducted by YouGov of Redwood City, CA. The two choices for the proposition in question was either `support` or `oppose`. Household income values are self reported, as this was a voluntary survey. There were 16 income brackets ranging from `less than $10,000` to `$500,000 or more` and one option for `Prefer not to say`. Education level was asked which had 6 options ranging from `No HS` to `Post-grad`. Land type had 5 options `city`, `suburb`, `town`, `rural area`, and `other`. Some of the options for these variables were excluded in the cleaned dataset as they were ambiguous.
 
 # Model
 
 ## Model set-up
 
-We want to model an American's stance on climate change, specifically their position on requiring that each state use a minimum amount of renewable fuels in the generation of electricity even if electricity prices increase a little. In our model, we consider a person's political preference, education level, and type of area they are living in to predict their stance on this topic.
+We want to model an American's stance on climate change, specifically their position on requiring that each state use a minimum amount of renewable fuels in the generation of electricity even if electricity prices increase a little. In our model, we consider a person's household income, education level, and type of area they are living in to predict their stance on this topic.
 
 The model we are interested in is:
 
@@ -79,23 +131,15 @@ y_i|\pi_i &\sim \mbox{Bern}(\pi_i) \\
 
 Where:
 
-* $y_i$ is the binary outcome variable, representing 
-* $\pi_i$ is the probability that respondent 
+* $y_i$ is the binary outcome variable for opposing the proposition
+* $\pi_i$ is the probability that respondent opposed the proposition
 * ${householdIncome}_i$ is a predictor variable, representing the household income of the respondent $i$, 
 * ${education}_i$ is a predictor variable, representing the education level of the respondent
-* ${livingArea}_i$ is a predictor variable, the residential area that the respondent is living in (urban, rural, suburban, etc.) $i$.
+* ${livingArea}_i$ is a predictor variable, the residential area that the respondent $i$ is living in (urban, rural, suburban, etc.)
 
 Since we have a binary outcome variable and multiple predictor/explanatory variables, we chose to use a logistic regression model fitted using a Bayesian framework. We utilized the package `rstanarm` [@rstanarm] in R [@citeR] to achieve this.
 
-### Model justification
-
-We chose householdIncome as a predictor variable because 
-
 # Results
-
-We performed logistic regression analysis on 3000 observations of the total 50788 observations in the cleaned dataset. We are interested in whether or not a person's household income, education, or area where they are living in will impact their stance towards switching to renewable energy sources at an increased price.
-
-\tiny
 
 ```{r}
 #| echo: false
@@ -107,21 +151,28 @@ library(modelsummary)
 
 modelsummary(
   list(
-    "Support renewable energy even at a higher monetary cost" = env_support
+    "Oppose requiring renewable energy at a higher monetary cost" = env_support
   ),
   statistic = "mad",
   output = "kableExtra") %>%
   kable_styling(font_size = 7)
 ```
+\newpage
 
-\normalsize
+We performed logistic regression analysis on 3000 observations of the total 50788 observations in the cleaned dataset. We are interested in whether or not a person's household income, education, or area where they are living in will impact their stance towards switching to renewable energy sources at an increased price. The coefficients represent opposing the proposition of requiring a minimum amount of renewable energy sources at a higher cost. This means that the smaller the coefficient, the more support there is for the proposition and the higher the number, the less support or the more opposition to the proposition.
+
+We can see that in @tbl-model-summary-table that as we move up the income brackets, the coefficients for household income do not decrease. This indicates that a person is not more likely to support the proposition if their income is higher.
+
+However, when we take a look at the education variable, we get that as a person has more education, they are more likely to support the proposition. This is in line with our prediction before creating the model. We can also see that as we move from city to rural areas, the support for the proposition decreases since the coefficients are larger the more rural the area is.
+
+We can see in @tbl-env-predictions that when the estimate is small, it indicates and individual supports the proposition. When the estimate is larger, it indicates a higher chance that the individual opposes the proposition. We can see that for the value 0.4192808, which is high, we get that the person's actually did oppose the proposition. Comparatively, for row 1 with estimate 0.2653025, the individual supported the proposition which follows from the estimate value. This means our model is accurate in predicting what a person will choose based on the three explanatory variables.
 
 ```{r}
 #| echo: false
 #| message: false
 #| warning: false
-#| label: env-predictions
-#| tbl-cap: "Probability that an individual supports that each state requires a minimum amount of renewable fuels for energy generation even if it increases costs"
+#| label: tbl-env-predictions
+#| tbl-cap: "Probability that an individual opposes that each state requires a minimum amount of renewable fuels for energy generation even if it increases costs"
 env_predictions <-
   predictions(env_support)
 
@@ -132,27 +183,27 @@ knitr::kable(head(env_predictions)) %>%
 
 # Discussion
 
-## Higher Household Income increases a person's willingness to contribute to renewable energy sources {#sec-first-point}
+## Higher Household Income does not increase a person's willingness to contribute to renewable energy sources {#sec-first-point}
 
-When looking at [table] , we can see that as a person's household income increases, they are more likely to be willing to support renewable energy sources at a slightly higher cost. [Talk about the coefficients here].
+When looking at @tbl-model-summary-table, we can see that as a person's household income increases, they are not more likely to be willing to support renewable energy sources at a slightly higher cost.
 
-This makes sense because as a person's income increases, they will be less affected by energy bill increases as someone who makes less money and is living paycheck to paycheck [insert stat about % of americans living p2p]. This could support the idea that a large majority of people are supportive of preventing climate change, however some will not support it with their votes if that means compromising their financial situation. Therefore, we need to think of a way to minimize impact on the population's financial situation to get more support and adoption of policies which will benefit the environment.
+This could be because people who earn a lot of money tend to be smarter about their money and try not to lose it to unnecessary things which they may think renewable energy is. Another reason is simply because the sample size is too small. We can see from @fig-hh-income-support that the amount of people above the $150,000-$199,999 bracket drops off signicantly. We use a sample of 3000 from the cleaned dataset so the amount of observations that the model had to work with was limited for higher income brackets and some observations may have skewed the results.
 
-## People living in more rural areas tend to have increased support {#sec-second-point}
+## People who have completed more years of education tend to have higher support {#sec-second-point}
 
-We can see from [table] that as the area a person is living in goes from urban to rural, there is an increase in support for states to have a minimum amount of renewable energy usage at a slightly higher cost. This is shown by [talk about the values/coefficients here].
+For the explanatory variable `education` which is the level of education the person has completed, @tbl-model-summary-table shows that there is an increase in support for the proposition if a person has a higher education level. 
 
-This could be due to various reasons. One of the reasons could be because people who live in rural areas may be farmers or work in the agriculture industry. Climate change has an impact on agriculture as heat stress can lead to declining crop yields [@UNClimateChange]. This could be a reason why people who live in these areas tend to support this proposition. Another reason could be that people who live in rural areas enjoy living in nature, away from cities and thus are more in tune with the environment. These people are more aware of the negative impacts that non-renewable fuels have on the earth.
+This could be because when a person is more educated, they tend to have better critical thinking skills as those are required in any field of study. Even if a person is not educated in topics related to climate change or renewable energy sources, they have the critical thinking skills to understand the effects that these changes will have in the future and what will happen if we do not take action.
 
-## People who have completed more years of education tend to have lower support {#sec-third-point}
+## People living in more rural areas tend to have decreased support {#sec-third-point}
 
-For the explanatory variable `education` which is the level of education the person has completed, the table shows that there doesn't seem to be an increase in support for requiring states have a minimum amount of renewable energy sources if there is a small increase in cost. [Talk about how the coefficients trend in a "V" shape or that both ends of the spectrum are higher than the middle]. 
-
-This could be because having more years of education does not necessarily imply more knowledge about issues such as climate change. If it is outside of their field, a person may have the same opinion whether they have more education or less as that education did not include the topic at hand. However, we expected the trend to be higher support with higher education because we thought that more years of education leads to more years of critical thinking. We thought they would apply critical thinking to the proposition to see that support would provide a larger benefit for the future.
+@tbl-model-summary-table shows that rural areas tend to have deceased support for the proposition. [@UrbanRuralEducation] shows that there is an educational gap between urban and rural America. As stated before, our model shows that support for the proposition increases as education level increases. This could be an effect of education as the difference between urban and rural can be seen in this aspect.
 
 ## Weaknesses and next steps
 
-Weakness in the question. It states "... even if electricity prices increase a little" but this is can mean something different to everyone. The wording leaves it up to the reader for interpretation on how much the price will increase. Thus, a person's decision may be different depending on if this question had a more concrete wording with a price range or percent.
+There is a possible weakness in the question. It states "[...] even if electricity prices increase a little" but this is can mean something different to everyone. The wording leaves it up to the reader for interpretation on how much the price will increase. Thus, a person's decision may be different depending on if this question had a more concrete wording with a price range or percent.
+
+Also, the model only sampled 3000 out of 50788 total observations from the cleaned dataset. This is due to performance and time restrictions. If we were able to efficiently create a model with more observations, it would be more accurate.
 
 \newpage
 

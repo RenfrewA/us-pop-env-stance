@@ -1,5 +1,5 @@
 #### Preamble ####
-# Purpose: Models... [...UPDATE THIS...]
+# Purpose: Models an individuals response to the proposition given 3 explanatory variables
 # Author: Renfrew Ao-Ieong
 # Date: 15 April 2023
 # Contact: renfrew.aoieong@mail.utoronto.ca
@@ -24,42 +24,10 @@ ces2020_env_reduced <-
   cleaned_ces2020_env |>
   slice_sample(n=3000)
 
+# Adapted from https://tellingstorieswithdata.com/13-ijaglm.html
 env_support <-
   stan_glm(
-    env_stance ~  household_income + education + living_area,
-    data = ces2020_env_reduced,
-    family = binomial(link = "logit"),
-    prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
-    prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
-    prior_aux = exponential(rate = 1, autoscale = TRUE),
-    seed = 123
-  )
-
-env_support_household_income <-
-  stan_glm(
-    env_stance ~  household_income,
-    data = ces2020_env_reduced,
-    family = binomial(link = "logit"),
-    prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
-    prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
-    prior_aux = exponential(rate = 1, autoscale = TRUE),
-    seed = 123
-  )
-
-env_support_education <-
-  stan_glm(
-    env_stance ~  education,
-    data = ces2020_env_reduced,
-    family = binomial(link = "logit"),
-    prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
-    prior_intercept = normal(location = 0, scale = 2.5, autoscale = TRUE),
-    prior_aux = exponential(rate = 1, autoscale = TRUE),
-    seed = 123
-  )
-
-env_support_living_area <-
-  stan_glm(
-    env_stance ~  living_area,
+    env_stance ~ household_income + education + living_area,
     data = ces2020_env_reduced,
     family = binomial(link = "logit"),
     prior = normal(location = 0, scale = 2.5, autoscale = TRUE),
@@ -73,10 +41,3 @@ saveRDS(
   env_support,
   file = "models/env_support.rds"
 )
-
-saveRDS(
-  env_support_education,
-  file = "models/env_support_education.rds"
-)
-
-
