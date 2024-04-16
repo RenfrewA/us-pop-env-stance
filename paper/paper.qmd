@@ -1,12 +1,12 @@
 ---
-title: "My title"
+title: "Factors affecting Americans' Reluctance to Support Renewable Energy Sources"
 subtitle: "My subtitle if needed"
 author: 
   - Renfrew Ao-Ieong
 thanks: "Code and data are available at: [https://github.com/RenfrewA/us-pop-env-stance](https://github.com/RenfrewA/us-pop-env-stance)"
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "Using data from CES2020, we investigated the support for the question: \"Require that each state use a minimum amount of renewable fuels in the generation of electricity even if electricity prices increase a little?\". We found that support increased as a person's household income increased and also increased if a person lived in a rural area. We also found that the level of education a person has does not neccessarily inrease their support for using renewable fuels. These findings give an insight into areas where we may need to focus resources on promoting the benefits of switching to sustainable and renewable sources of energy."
 format: pdf
 number-sections: true
 toc: true
@@ -29,6 +29,7 @@ library(arrow)
 library(scales)
 library(modelsummary)
 library(marginaleffects)
+library(kableExtra)
 
 # Read in cleaned data
 ces2020_env = read_parquet(
@@ -47,16 +48,16 @@ env_support_education <-
 
 # Introduction
 
-We are becoming more aware of the effects that humans have on the environment. In the past _____ years, we have done _________ to negatively impact the environment. To prevent this on a large scale, it is up to the governments of countries. One of the leading causes of pollution is the burning of fossil fuels to generate electricity. To prevent this, a shift towards renewable energy sources has been on the rise. Harnessing renewable energy sources such as wind, solar, and hydroelectric will be needed if we are to reduce the harmful air pollution from the retrieval and use of sources such as coal, oil, and natural gas. The challenge is that the infrastructure has been in place for a long time and thus, we need to build new infrastructure for renewable energy sources such as building dams, wind turbines, and solar panels. This will come at a financial cost which will have to ultimately come from the citizens in the form of increased taxes or increased electricity payments. 
+Society is becoming increasing aware of the effects that humans have on the environment. To prevent this on a large scale, it is up to the governments of countries. One of the leading causes of pollution is the burning of fossil fuels to generate electricity [@UNClimateChange]. To prevent this, a shift towards renewable energy sources has been on the rise. Harnessing renewable energy sources such as wind, solar, and hydroelectric will be needed if we are to reduce the harmful air pollution from the retrieval and use of sources such as coal, oil, and natural gas. The challenge is that the infrastructure has been in place for a long time and thus, we need to build new infrastructure for renewable energy sources such as building dams, wind turbines, and solar panels. This will come at a financial cost which will have to ultimately come from the citizens in the form of increased taxes or increased electricity payments. 
 
 From the CES 2020 dataset, we will analyze whether household income, education level, and type of area a person is living in affects their stance on reducing pollution and climate change prevention.
 
-The scenario that was proposed in the survey was: Require that each state use a minimum amount of renewable fuels (wind, solar, and hydroelectric) in the generation of electricity even if electricity prices increase a little. And the possible responses were: support or oppose. By analyzing this data, we can identify trends with the previously stated factors. This can be used to better understand people's stance on this issue and help develop different ways to increase support.
+The scenario that was proposed in the survey was: Require that each state use a minimum amount of renewable fuels (wind, solar, and hydroelectric) in the generation of electricity even if electricity prices increase a little. Our estimand is the value of support for this proposition, either support or oppose. By analyzing this data, we can identify trends with the previously stated factors. This can be used to better understand people's stance on this issue and help develop different ways to increase support.
 
-There will always be a cost associated with preventing climate change. If we choose to continue with the existing and outdated ways, it will cost more in the long run.
-
+The structure of the paper is as follows: Data, Model, Results, and Discussion.
 
 # Data {#sec-data}
+
 
 
 # Model
@@ -94,6 +95,8 @@ We chose householdIncome as a predictor variable because
 
 We performed logistic regression analysis on 3000 observations of the total 50788 observations in the cleaned dataset. We are interested in whether or not a person's household income, education, or area where they are living in will impact their stance towards switching to renewable energy sources at an increased price.
 
+\tiny
+
 ```{r}
 #| echo: false
 #| message: false
@@ -106,9 +109,12 @@ modelsummary(
   list(
     "Support renewable energy even at a higher monetary cost" = env_support
   ),
-  statistic = "mad"
-  )
+  statistic = "mad",
+  output = "kableExtra") %>%
+  kable_styling(font_size = 7)
 ```
+
+\normalsize
 
 ```{r}
 #| echo: false
@@ -119,8 +125,10 @@ modelsummary(
 env_predictions <-
   predictions(env_support)
 
-knitr::kable(tail(env_predictions))
+knitr::kable(head(env_predictions)) %>%
+  kable_styling(font_size = 10)
 ```
+
 
 # Discussion
 
@@ -134,7 +142,7 @@ This makes sense because as a person's income increases, they will be less affec
 
 We can see from [table] that as the area a person is living in goes from urban to rural, there is an increase in support for states to have a minimum amount of renewable energy usage at a slightly higher cost. This is shown by [talk about the values/coefficients here].
 
-This could be due to various reasons. One of the reasons could be because people who live in rural areas may be farmers or work in the agriculture industry. Climate change has an impact on agriculture [find source]. This could be a reason why people who live in these areas tend to support this proposition. Another reason could be that people who live in rural areas enjoy living in nature, away from cities and thus are more in tune with the environment. These people are more aware of the negative impacts that non-renewable fuels have on the earth.
+This could be due to various reasons. One of the reasons could be because people who live in rural areas may be farmers or work in the agriculture industry. Climate change has an impact on agriculture as heat stress can lead to declining crop yields [@UNClimateChange]. This could be a reason why people who live in these areas tend to support this proposition. Another reason could be that people who live in rural areas enjoy living in nature, away from cities and thus are more in tune with the environment. These people are more aware of the negative impacts that non-renewable fuels have on the earth.
 
 ## People who have completed more years of education tend to have lower support {#sec-third-point}
 
@@ -147,16 +155,6 @@ This could be because having more years of education does not necessarily imply 
 Weakness in the question. It states "... even if electricity prices increase a little" but this is can mean something different to everyone. The wording leaves it up to the reader for interpretation on how much the price will increase. Thus, a person's decision may be different depending on if this question had a more concrete wording with a price range or percent.
 
 \newpage
-
-\appendix
-
-# Appendix {-}
-
-
-# Additional data details
-
-\newpage
-
 
 # References
 
